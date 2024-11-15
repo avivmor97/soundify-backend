@@ -65,10 +65,7 @@ async function getByUsername(username) {
             return null;  // Explicitly return null when user is not found
         }
 
-        // Optionally, you can use a projection to exclude fields like password (for security reasons)
-        const { password, ...userWithoutPassword } = user;  // Destructure and exclude the password field
-
-        return userWithoutPassword; // Return the user without the password field
+        return user;  // Return the entire user object, including the password
     } catch (err) {
         logger.error(`Error while finding user by username: ${username}`, err);
         throw new Error('Error finding user');  // Provide a more specific error message

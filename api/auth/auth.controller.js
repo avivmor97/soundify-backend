@@ -1,9 +1,8 @@
 import { authService } from './auth.service.js'
 import { logger } from '../../services/logger.service.js'
-import {userService} from './../user/user.service.js'
-import bcrypt from 'bcryptjs';
+import { userService } from './../user/user.service.js'
 
-// auth.controller.js
+
 export async function login(req, res) {
     try {
         const { username, password } = req.body;
@@ -15,14 +14,18 @@ export async function login(req, res) {
 
         const user = await userService.getByUsername(username);
 
-        if (!user || !user.password) {
-            return res.status(401).send('Invalid username or password');
-        }
-
-        const isValidPassword = await bcrypt.compare(password, user.password);
-        if (!isValidPassword) {
-            return res.status(401).send('Invalid username or password');
-        }
+		if (!user || !user.password) {
+			console.error(`[LOGIN FAILURE1] Username: ${username} not found or password missing`);
+			console.log("User object:", user);
+			console.log("User password:", user ? user.password : "No password");
+			return res.status(401).send('Invalid username or password');
+		}
+		
+		// Directly compare passwords (plaintext comparison)
+		if (password !== user.password) {
+			console.error(`[LOGIN FAILURE2] Incorrect password for username: ${username}`);
+			return res.status(401).send('Invalid username or password');
+		}
 
         // Set token or session
         res.cookie('loginToken', 'example-token', { httpOnly: true });
@@ -33,38 +36,36 @@ export async function login(req, res) {
     }
 }
 
-
-
-
 export async function signup(req, res) {
-	try {
-		const credentials = req.body
+    try {
+        const credentials = req.body;
 
-		// Never log passwords
-		// logger.debug(credentials)
-		
-        const account = await authService.signup(credentials)
-		logger.debug(`auth.route - new account created: ` + JSON.stringify(account))
-		
-        const user = await authService.login(credentials.username, credentials.password)
-		logger.info('User signup:', user)
-		
-        const loginToken = authService.getLoginToken(user)
-		res.cookie('loginToken', loginToken, { sameSite: 'None', secure: true })
-		res.json(user)
-	} catch (err) {
-		logger.error('Failed to signup ' + err)
-		res.status(400).send({ err: 'Failed to signup' })
-	}
+        // Never log passwords
+        // logger.debug(credentials)
+
+        const account = await authService.signup(credentials);
+        logger.debug(`auth.route - new account created: ` + JSON.stringify(account));
+
+        // Directly use the credentials for login
+        const user = await authService.login(credentials.username, credentials.password);
+        logger.info('User signup:', user);
+
+        const loginToken = authService.getLoginToken(user);
+        res.cookie('loginToken', loginToken, { sameSite: 'None', secure: true });
+        res.json(user);
+    } catch (err) {
+        logger.error('Failed to signup ' + err);
+        res.status(400).send({ err: 'Failed to signup' });
+    }
 }
 
 export async function logout(req, res) {
-	try {
-		res.clearCookie('loginToken')
-		res.send({ msg: 'Logged out successfully' })
-	} catch (err) {
-		res.status(400).send({ err: 'Failed to logout' })
-	}
+    try {
+        res.clearCookie('loginToken');
+        res.send({ msg: 'Logged out successfully' });
+    } catch (err) {
+        res.status(400).send({ err: 'Failed to logout' });
+    }
 }
 
 export async function validateToken(req, res) {
@@ -83,4 +84,3 @@ export async function validateToken(req, res) {
         res.status(500).json({ err: 'Failed to validate token' });
     }
 }
-
