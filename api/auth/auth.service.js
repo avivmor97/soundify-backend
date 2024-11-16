@@ -1,17 +1,19 @@
 import { userService } from '../user/user.service.js';
 import { logger } from '../../services/logger.service.js';
+import jwt from 'jsonwebtoken';
+
+const SECRET_KEY = 'gign585';
 
 export const authService = {
     signup,
     login,
-    getLoginToken,
+    generateToken,
     validateToken,
 };
 
+// Login function
 async function login(username, password) {
     logger.debug('authService.login - Start login process');
-    
-    // Log received credentials (excluding password for security)
     console.log(`[LOGIN ATTEMPT] Username: ${username}`);
 
     // Fetch the user by username
@@ -19,58 +21,77 @@ async function login(username, password) {
     if (!user) {
         console.error(`[LOGIN FAILURE] Username: ${username} not found`);
         logger.warn(`authService.login - Failed login: username "${username}" not found`);
-        return Promise.reject('Invalid username or password');
+        throw new Error('Invalid username or password');
     }
+
     console.log(`[USER FOUND] Username: ${username}`);
 
-    // Compare the provided password with the stored password (plain text)
+    // Compare the provided password with the stored password (plain text comparison)
     if (user.password !== password) {
         console.error(`[LOGIN FAILURE] Incorrect password for username: ${username}`);
         logger.warn(`authService.login - Failed login: invalid password for username "${username}"`);
-        return Promise.reject('Invalid username or password');
+        throw new Error('Invalid username or password');
     }
+
     console.log(`[PASSWORD VERIFIED] Username: ${username}`);
 
-    // Remove sensitive information
+    // Remove sensitive information from the user object
     delete user.password;
     user._id = user._id.toString();
 
-    // Generate login token
-    const token = getLoginToken(user);
+    // Generate and return login token
+    const token = generateToken(user);
     console.log(`[TOKEN GENERATED] For username: ${username}`);
     logger.info(`authService.login - Successful login for username "${username}"`);
 
     return { user, token };
 }
 
+// Signup function
 async function signup({ username, password, imgUrl }) {
-    logger.debug(`auth.service - signup with username: ${username}`);
+    logger.debug(`authService.signup - Attempting signup with username: ${username}`);
 
-    if (!username || !password) return Promise.reject('Missing required signup information');
+    if (!username || !password) {
+        throw new Error('Missing required signup information');
+    }
 
     const userExist = await userService.getByUsername(username);
-    if (userExist) return Promise.reject('Username already taken');
-
-    // Store the password as plain text
-    return userService.add({ username, password, imgUrl });
-}
-
-function getLoginToken(user) {
-    const userInfo = { 
-        _id: user._id, 
-        fullname: user.fullname, 
-        
-    };
-    // You can implement any kind of token creation logic here.
-    return JSON.stringify(userInfo);  // Just an example
-}
-
-function validateToken(loginToken) {
-    try {
-        const loggedinUser = JSON.parse(loginToken);
-        return loggedinUser;
-    } catch (err) {
-        console.log('Invalid login token');
+    if (userExist) {
+        throw new Error('Username already taken');
     }
-    return null;
+
+    // Add the new user
+    const newUser = await userService.add({ username, password, imgUrl });
+    logger.info(`authService.signup - New user created: ${username}`);
+    return newUser;
 }
+
+// Generate a JWT token
+export function generateToken(user) {
+    const payload = { 
+        id: user._id, 
+        username: user.username 
+    };
+    const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '1h' });
+    console.log('[GENERATED TOKEN]:', token); // Debugging the generated token
+    return token;
+}
+
+// Validate and decode a JWT token
+export function validateToken(token) {
+    try {
+        // Ensure the token is not null or undefined before attempting to verify
+        if (!token) {
+            console.error('No token provided');
+            return null;
+        }
+
+        // Decode the token using jwt.verify
+        const decoded = jwt.verify(token, SECRET_KEY);
+        return decoded; // This typically includes user data like ID or username
+    } catch (err) {
+        console.error('Invalid token:', err.message);
+        return null; // Return null for an invalid token
+    }
+}
+
