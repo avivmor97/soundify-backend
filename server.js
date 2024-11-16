@@ -11,8 +11,30 @@ import { setupSocketAPI } from './services/socket.service.js'
 
 import { setupAsyncLocalStorage } from './middlewares/setupAls.middleware.js'
 
+import { searchSongs, initializeYTMusic ,parseSearchResult} from './services/ytmusicapi.service.js'
+
+
 const app = express()
 const server = http.createServer(app)
+initializeYTMusic();
+
+app.get('/api/ytmusic/search', async (req, res) => {
+    const { query } = req.query;
+    if (!query) {
+        console.error('Missing query parameter');
+        return res.status(400).send({ error: 'Query parameter is required' });
+    }
+
+    try {
+        console.log(`Searching for: ${query}`);
+        const rawResults = await searchSongs(query);
+        const parsedResults = rawResults.map((item) => parseSearchResult(item));
+        res.json(parsedResults);
+    } catch (error) {
+        console.error('Error handling search request:', error);
+        res.status(500).send({ error: 'Failed to search songs' });
+    }
+});
 
 // Express App Config
 app.use(cookieParser())
@@ -25,7 +47,9 @@ if (process.env.NODE_ENV === 'production') {
         origin: [   'http://127.0.0.1:3030',
                     'http://localhost:3030',
                     'http://127.0.0.1:5174',
-                    'http://localhost:5174'
+                    'http://localhost:5174',
+                    'http://127.0.0.1:5173',
+                    'http://localhost:5173',
                 ],
         credentials: true
     }
@@ -44,9 +68,9 @@ setupSocketAPI(server)
 // it will still serve the index.html file
 // and allow vue/react-router to take it from there
 
-app.get('/**', (req, res) => {
-    res.sendFile(path.resolve('public/index.html'))
-})
+// app.get('/**', (req, res) => {
+//     res.sendFile(path.resolve('public/index.html'))
+// })
 
 import { logger } from './services/logger.service.js'
 const port = process.env.PORT || 3030
