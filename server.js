@@ -39,6 +39,7 @@ app.get('/api/ytmusic/search', async (req, res) => {
 // Express App Config
 app.use(cookieParser())
 app.use(express.json())
+app.disable('etag');
 
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.resolve('public')))

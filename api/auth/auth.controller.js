@@ -14,27 +14,37 @@ export async function login(req, res) {
 
         const user = await userService.getByUsername(username);
 
-		if (!user || !user.password) {
-			console.error(`[LOGIN FAILURE1] Username: ${username} not found or password missing`);
-			console.log("User object:", user);
-			console.log("User password:", user ? user.password : "No password");
-			return res.status(401).send('Invalid username or password');
-		}
-		
-		// Directly compare passwords (plaintext comparison)
-		if (password !== user.password) {
-			console.error(`[LOGIN FAILURE2] Incorrect password for username: ${username}`);
-			return res.status(401).send('Invalid username or password');
-		}
+        if (!user || !user.password) {
+            console.error(`[LOGIN FAILURE1] Username: ${username} not found or password missing`);
+            console.log("User object:", user);
+            console.log("User password:", user ? user.password : "No password");
+            return res.status(401).send('Invalid username or password');
+        }
+        
+        // Directly compare passwords (plaintext comparison)
+        if (password !== user.password) {
+            console.error(`[LOGIN FAILURE2] Incorrect password for username: ${username}`);
+            return res.status(401).send('Invalid username or password');
+        }
 
-        // Set token or session
-        res.cookie('loginToken', 'example-token', { httpOnly: true });
+        // Generate the token
+        const token = authService.generateToken(user);
+
+        // Log a message indicating the token has been generated successfully
+        console.log(`[TOKEN GENERATED] Successfully generated token for user: ${username}`);
+
+        // Set the token in an HTTP-only cookie
+        res.cookie('loginToken', token, { httpOnly: true, secure: true, sameSite: 'None' });
+
+        // Respond with the user data (excluding the password)
+        delete user.password;  // Remove password for security
         res.send(user);
     } catch (err) {
         console.error('Failed to login:', err);
         res.status(500).send('Failed to login');
     }
 }
+
 
 export async function signup(req, res) {
     try {
@@ -61,12 +71,31 @@ export async function signup(req, res) {
 
 export async function logout(req, res) {
     try {
+        // Extract token from the cookies
+        const token = req.cookies.loginToken;
+        if (!token) {
+            return res.status(401).send({ msg: 'No user is logged in' });
+        }
+
+        // Validate and decode the token using the service
+        const user = authService.validateToken(token); 
+        if (!user) {
+            return res.status(401).send({ msg: 'Invalid token, no user logged out' });
+        }
+
+        console.log(`User logged out: ${user.username}`); // Log the username or other decoded data
+
+        // Clear the login token cookie
         res.clearCookie('loginToken');
-        res.send({ msg: 'Logged out successfully' });
+        res.send({ msg: 'Logged out successfully', username: user.username }); // Return user info to frontend
     } catch (err) {
-        res.status(400).send({ err: 'Failed to logout' });
+        console.error('Logout error:', err); // Log errors for debugging
+        res.status(500).send({ err: 'Failed to logout' });
     }
 }
+
+
+
 
 export async function validateToken(req, res) {
     try {

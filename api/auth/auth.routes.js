@@ -9,4 +9,5 @@ router.post('/signup', signup)
 router.post('/logout', logout)
 router.get('/validate-token', validateToken)
 
+
 export const authRoutes = router
