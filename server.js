@@ -6,35 +6,14 @@ import cookieParser from 'cookie-parser'
 
 import { authRoutes } from './api/auth/auth.routes.js'
 import { userRoutes } from './api/user/user.routes.js'
-
 import { setupSocketAPI } from './services/socket.service.js'
-
 import { setupAsyncLocalStorage } from './middlewares/setupAls.middleware.js'
 
-import { searchSongs, initializeYTMusic ,parseSearchResult} from './services/ytmusicapi.service.js'
 
 
 const app = express()
 const server = http.createServer(app)
-initializeYTMusic();
 
-app.get('/api/ytmusic/search', async (req, res) => {
-    const { query } = req.query;
-    if (!query) {
-        console.error('Missing query parameter');
-        return res.status(400).send({ error: 'Query parameter is required' });
-    }
-
-    try {
-        console.log(`Searching for: ${query}`);
-        const rawResults = await searchSongs(query);
-        const parsedResults = rawResults.map((item) => parseSearchResult(item));
-        res.json(parsedResults);
-    } catch (error) {
-        console.error('Error handling search request:', error);
-        res.status(500).send({ error: 'Failed to search songs' });
-    }
-});
 
 // Express App Config
 app.use(cookieParser())
