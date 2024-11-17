@@ -7,6 +7,7 @@ import cookieParser from 'cookie-parser'
 import { authRoutes } from './api/auth/auth.routes.js'
 import { userRoutes } from './api/user/user.routes.js'
 import { spotifyRoutes } from './api/spotify/spotify.routes.js'
+import { youtubeRoutes } from './api/youtube/youtube.routes.js'
 import { setupSocketAPI } from './services/socket.service.js'
 import { setupAsyncLocalStorage } from './middlewares/setupAls.middleware.js'
 
@@ -41,6 +42,8 @@ app.all('*', setupAsyncLocalStorage)
 app.use('/api/auth', authRoutes)
 app.use('/api/user', userRoutes)
 app.use('/api/spotify', spotifyRoutes)
+app.use('/api/youtube', youtubeRoutes)
+app.use('/api/chat', chatRoutes)
 
 
 setupSocketAPI(server)
@@ -55,6 +58,7 @@ setupSocketAPI(server)
 // })
 
 import { logger } from './services/logger.service.js'
+import { chatRoutes } from './api/chat/chat.routes.js'
 const port = process.env.PORT || 3030
 
 server.listen(port, () => {
