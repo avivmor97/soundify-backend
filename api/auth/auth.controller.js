@@ -16,8 +16,6 @@ export async function login(req, res) {
 
         if (!user || !user.password) {
             console.error(`[LOGIN FAILURE1] Username: ${username} not found or password missing`);
-            console.log("User object:", user);
-            console.log("User password:", user ? user.password : "No password");
             return res.status(401).send('Invalid username or password');
         }
         
@@ -36,9 +34,12 @@ export async function login(req, res) {
         // Set the token in an HTTP-only cookie
         res.cookie('loginToken', token, { httpOnly: true, secure: true, sameSite: 'None' });
 
-        // Respond with the user data (excluding the password)
+        // Respond with the user data (excluding the password) and the token
         delete user.password;  // Remove password for security
-        res.send(user);
+        res.json({
+            user: user,
+            token: token // Include the token here
+        });
     } catch (err) {
         console.error('Failed to login:', err);
         res.status(500).send('Failed to login');
@@ -46,13 +47,12 @@ export async function login(req, res) {
 }
 
 
+
 export async function signup(req, res) {
     try {
         const credentials = req.body;
 
-        // Never log passwords
-        // logger.debug(credentials)
-
+     
         const account = await authService.signup(credentials);
         logger.debug(`auth.route - new account created: ` + JSON.stringify(account));
 
@@ -71,13 +71,12 @@ export async function signup(req, res) {
 
 export async function logout(req, res) {
     try {
-        // Extract token from the cookies
+        
         const token = req.cookies.loginToken;
         if (!token) {
             return res.status(401).send({ msg: 'No user is logged in' });
         }
 
-        // Validate and decode the token using the service
         const user = authService.validateToken(token); 
         if (!user) {
             return res.status(401).send({ msg: 'Invalid token, no user logged out' });
@@ -99,17 +98,24 @@ export async function logout(req, res) {
 
 export async function validateToken(req, res) {
     try {
-        const token = req.cookies.loginToken;
-        if (!token) return res.status(401).json({ isLoggedIn: false });
+        const token = req.cookies.loginToken || req.body.token;
+        console.log('Token received for validation:', token); // Debug the token
 
-        const user = authService.validateToken(token); // Assuming this function exists and works as expected
+        if (!token) {
+            console.error('No token provided');
+            return res.status(401).json({ isLoggedIn: false });
+        }
+
+        const user = authService.validateToken(token);
         if (user) {
-            res.status(200).json({ isLoggedIn: true, user });
+            console.log('Token is valid for user:', user); // Debug user info
+            return res.status(200).json({ isLoggedIn: true, user });
         } else {
-            res.status(401).json({ isLoggedIn: false });
+            console.error('Invalid token');
+            return res.status(401).json({ isLoggedIn: false });
         }
     } catch (err) {
-        console.error('Token validation error:', err);
-        res.status(500).json({ err: 'Failed to validate token' });
+        console.error('Error during token validation:', err.message); // Debug the error message
+        return res.status(500).json({ err: 'Failed to validate token' });
     }
 }
