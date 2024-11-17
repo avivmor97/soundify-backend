@@ -15,6 +15,7 @@ export async function initializeYTMusic() {
 
 
 export function parseSearchResult(item) {
+    console.log(item)
     return {
         title: item.name || '',
         artist: item.artist?.name || '',
