@@ -80,18 +80,17 @@ export function generateToken(user) {
 // Validate and decode a JWT token
 export function validateToken(token) {
     try {
-        // Ensure the token is not null or undefined before attempting to verify
         if (!token) {
             console.error('No token provided');
             return null;
         }
 
-        // Decode the token using jwt.verify
         const decoded = jwt.verify(token, SECRET_KEY);
-        return decoded; // This typically includes user data like ID or username
+        console.log('Token successfully validated:', decoded); // Debug decoded payload
+        return decoded;
     } catch (err) {
-        console.error('Invalid token:', err.message);
-        return null; // Return null for an invalid token
+        console.error('Token validation failed:', err.message); // Detailed error logging
+        return null;
     }
 }
 
