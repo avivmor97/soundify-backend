@@ -6,24 +6,25 @@ import cookieParser from 'cookie-parser'
 
 import { authRoutes } from './api/auth/auth.routes.js'
 import { userRoutes } from './api/user/user.routes.js'
+import { spotifyRoutes } from './api/spotify/spotify.routes.js'
 import { setupSocketAPI } from './services/socket.service.js'
 import { setupAsyncLocalStorage } from './middlewares/setupAls.middleware.js'
 
-
-
 const app = express()
 const server = http.createServer(app)
-
 
 // Express App Config
 app.use(cookieParser())
 app.use(express.json())
 
+// app.use('/api/youtube/song')
+
+// app.use('/api/chat/search')
+
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.resolve('public')))
 } else {
     const corsOptions = {
-        
         origin: [   'http://127.0.0.1:3030',
                     'http://localhost:3030',
                     'http://127.0.0.1:5174',
@@ -39,6 +40,7 @@ app.all('*', setupAsyncLocalStorage)
 
 app.use('/api/auth', authRoutes)
 app.use('/api/user', userRoutes)
+app.use('/api/spotify', spotifyRoutes)
 
 
 setupSocketAPI(server)
