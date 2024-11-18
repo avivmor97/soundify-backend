@@ -12,6 +12,8 @@ import { stationRoutes } from './api/stations/station.routes.js'
 import { setupSocketAPI } from './services/socket.service.js'
 import { setupAsyncLocalStorage } from './middlewares/setupAls.middleware.js'
 
+import { savePlaylistData } from './spotify-data.js'
+
 const app = express()
 const server = http.createServer(app)
 
@@ -28,12 +30,12 @@ if (process.env.NODE_ENV === 'production') {
 } else {
     const corsOptions = {
         origin: [   'http://127.0.0.1:3030',
-                    'http://localhost:3030',
-                    'http://127.0.0.1:5174',
-                    'http://localhost:5174',
-                    'http://127.0.0.1:5173',
-                    'http://localhost:5173',
-                ],
+            'http://localhost:3030',
+            'http://127.0.0.1:5174',
+            'http://localhost:5174',
+            'http://127.0.0.1:5173',
+            'http://localhost:5173',
+        ],
         credentials: true
     }
     app.use(cors(corsOptions))
@@ -56,13 +58,16 @@ setupSocketAPI(server)
 // and allow vue/react-router to take it from there
 
 // app.get('/**', (req, res) => {
-//     res.sendFile(path.resolve('public/index.html'))
-// })
-
-import { logger } from './services/logger.service.js'
-import { chatRoutes } from './api/chat/chat.routes.js'
-const port = process.env.PORT || 3030
-
-server.listen(port, () => {
-    logger.info('Server is running on port: ' + port)
-})
+    //     res.sendFile(path.resolve('public/index.html'))
+    // })
+    
+    import { logger } from './services/logger.service.js'
+    import { chatRoutes } from './api/chat/chat.routes.js'
+    const port = process.env.PORT || 3030
+    
+    server.listen(port, () => {
+        logger.info('Server is running on port: ' + port)
+        // savePlaylistData('2xHVoSjTKY6E0YIwggIon5');
+    })
+    
+    
