@@ -11,7 +11,7 @@ const youtubeApi = new youtube_v3.Youtube({
 
 async function searchYoutubeVideo(query) {
     try {
-        // ביצוע בקשת חיפוש
+
         const response = await youtubeApi.search.list({
             part: 'snippet',
             q: query,
@@ -20,7 +20,7 @@ async function searchYoutubeVideo(query) {
             videoEmbeddable: 'true',
         });
 
-        // בדיקת תוצאות והחזרת ה-videoId
+
         if (response.data.items && response.data.items.length > 0) {
             const videoId = response.data.items[0].id.videoId;
             return videoId;
