@@ -1,7 +1,6 @@
 import {spotifyService} from './spotify.service.js'
 
 export async function search(req,res){
-
     try {
         const user = await spotifyService.search(req.query.q)
         res.send(user)
