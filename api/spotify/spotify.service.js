@@ -15,8 +15,6 @@ export const spotifyService = {
 }
 
 async function getArtistById(id) {
-    console.log(id);
-
     try {
         const artist = spotifyApi.artists.get(id)
         return artist
@@ -37,12 +35,11 @@ async function search(query) {
 
 async function getPlaylistById(id) {
     try {
-        const trackFields = `items(added_at,type,id,track(id,type,album(images,release_date),artists(id,name,type),duration_ms,track_number,external_urls(spotify)))`
+        const trackFields = `items(added_at,type,id,track(id,name,type,album(images,release_date),artists(id,name,type),duration_ms,track_number,external_urls(spotify)))`;
         const fields = `description,collaborative,followers(href,total),images,name,owner(display_name,external_urls(spotify))`;
 
         const market = 'IL';
         const limit = 50;
-
 
         const playlist = await spotifyApi.playlists.getPlaylist(id, market, fields);
         const tracks = await spotifyApi.playlists.getPlaylistItems(id, market, trackFields, limit);
@@ -52,3 +49,6 @@ async function getPlaylistById(id) {
         throw err
     }
 }
+
+
+

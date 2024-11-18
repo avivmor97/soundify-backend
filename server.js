@@ -67,7 +67,19 @@ setupSocketAPI(server)
     
     server.listen(port, () => {
         logger.info('Server is running on port: ' + port)
+        // savePlaylistData('4V3K3JyGFBjgnjj3wwWH4f');
+        // savePlaylistData('37i9dQZEVXbJ6IpvItkve3');
+        // savePlaylistData('37i9dQZF1DWSYF6geMtQMW');
+        // savePlaylistData('37i9dQZEVXbNG2KDcFcKOF');
         // savePlaylistData('2xHVoSjTKY6E0YIwggIon5');
+        // savePlaylistData('37i9dQZEVXbLp5XoPON0wI');
+        // savePlaylistData('37i9dQZEVXbLRQDuF5jeBp');
+        // savePlaylistData('37i9dQZEVXbLiRSasKsNU9');
+        // savePlaylistData('37i9dQZEVXbKuaTI1Z1Afx');
+        // savePlaylistData('37i9dQZF1DWUa8ZRTfalHk');
+        // savePlaylistData('37i9dQZF1DWV7EzJMK2FUI');
+        // savePlaylistData('5ZBiA4R9h3CC3F2SJIhAm9');
+        // savePlaylistData('37i9dQZF1DX1lHW2vbQwNN');
     })
     
     
