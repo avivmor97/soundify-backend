@@ -9,15 +9,11 @@ export const stationService = {
 	query,
 	getById,
 	add,
-	// update,
+	update,
 }
 
 async function query(filterBy = { txt: '' }) {
 	try {
-        // const criteria = {
-        //     name: { $regex: filterBy.txt, $options: 'i' },
-        // }
-
 		const collection = await dbService.getCollection('station')
 		var stations = await collection.find().toArray()
 		return stations
@@ -62,23 +58,20 @@ async function add(station) {
 	}
 }
 
-// async function update(station) {
-// 	try {
-// 		const stationToSave = {
-// 			name: toy.name,
-// 			price: toy.price,
-// 			labels : toy.labels,
-// 			createdAt: toy.createdAt,
-// 			inStock: toy.inStock
-// 		}
-// 		const collection = await dbService.getCollection('toy')
-// 		await collection.updateOne({ _id: ObjectId.createFromHexString(toy._id) }, { $set: stationToSave })
-// 		return toy
-// 	} catch (err) {
-// 		logger.error(`cannot update toy ${toyId}`, err)
-// 		throw err
-// 	}
-// }
+async function update(station) {
+	try {
+		///// id ih the params req , body = {update object}
+		const collection = await dbService.getCollection('station')
+		await collection.updateOne(
+            { _id: ObjectId.createFromHexString(station._id) },
+			{ $set: station.update }
+        )
+		return station
+	} catch (err) {
+		logger.error(`cannot update station ${station._id}`, err)
+		throw err
+	}
+}
 
 
 
