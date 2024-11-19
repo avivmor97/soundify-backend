@@ -39,6 +39,11 @@ export function setupSocketAPI(http) {
             logger.info(`Socket disconnected [id: ${socket.id}]`)
         })
 
+        socket.on('station-watch', stationId => {
+            logger.info(`Station watch from socket [id: ${socket.id}]`)
+            socket.join('watching:' +stationId)
+        })
+
     })
 }
 

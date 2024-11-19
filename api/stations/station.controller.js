@@ -1,5 +1,8 @@
 import { stationService } from './station.service.js'
 import { logger } from '../../services/logger.service.js'
+import { socketService } from '../../services/socket.service.js'
+import { userService } from '../user/user.service.js'
+import { authService } from '../auth/auth.service.js'
 
 export async function getStations(req, res) {
     try {
@@ -84,6 +87,7 @@ export async function updateStation(req, res) {
         station._id = stationId
 
         const updatedStation = await stationService.update(station)
+socketService.emitTo({type:'station-updated', data:updatedStation,label:updatedStation._id})
         res.send(updatedStation)
     } catch (err) {
         logger.error('Failed to update station', err)
