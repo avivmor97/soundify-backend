@@ -10,8 +10,9 @@ const youtubeApi = new youtube_v3.Youtube({
 });
 
 async function searchYoutubeVideo(query) {
+    console.log(query);
+    
     try {
-
         const response = await youtubeApi.search.list({
             part: 'snippet',
             q: query,
