@@ -21,7 +21,7 @@ export async function getPlaylist(req,res){
     }
 }
 
-export async function getArtist(req,res){
+export async function getArtist(req,res){      
     try {
         const user = await spotifyService.getArtistById(req.params.artistId)
         res.send(user)

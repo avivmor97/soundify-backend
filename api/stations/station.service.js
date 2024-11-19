@@ -62,10 +62,12 @@ async function update(station) {
 	const stationTosave = { owner: station.owner, images: station.images ,collaborative : station.collaborative,name: station.name, followers: station.followers,description: station.description,tracks: station.tracks }
 	try {
 		///// id ih the params req , body = {update object}
+
 		const criteria = { _id: ObjectId.createFromHexString(station._id) }
 		const collection = await dbService.getCollection('station')
 		await collection.updateOne(criteria, { $set: stationTosave })
-		return station
+		return stationTosave
+		
 	} catch (err) {
 		logger.error(`cannot update station ${station._id}`, err)
 		throw err

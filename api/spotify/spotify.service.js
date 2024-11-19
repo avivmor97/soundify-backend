@@ -14,9 +14,11 @@ export const spotifyService = {
     getPlaylistById
 }
 
-async function getArtistById(id) {
+async function getArtistById(artistId) {    
     try {
-        const artist = spotifyApi.artists.get(id)
+        const artist = await spotifyApi.artists.get(artistId)
+        const topTracks = await spotifyApi.artists.topTracks(artistId, 'IL')
+        artist.tracks = topTracks.tracks
         return artist
     } catch (err) {
         throw err
@@ -24,7 +26,6 @@ async function getArtistById(id) {
 }
 
 async function search(query) {
-
     try {
         const market = 'IL';
         const limit = 10;
