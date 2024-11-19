@@ -2,7 +2,7 @@ import fs from "fs";
 
 import { spotifyService } from './api/spotify/spotify.service.js'
 
-const dataFile = "./data.json";
+const dataFile = "./data-backup.json";
 
 export async function savePlaylistData(id) {
     const playlistData = await spotifyService.getPlaylistById(id);

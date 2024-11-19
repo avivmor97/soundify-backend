@@ -77,12 +77,11 @@ export async function addStation(req, res) {
 
 export async function updateStation(req, res) {
     try {
+        const station = req.body
         const stationId = req.params.id
 
-        const station = {}
-        station.update = req.body
+        // station.update = req.body
         station._id = stationId
-        console.log(station);
 
         const updatedStation = await stationService.update(station)
         res.send(updatedStation)
@@ -91,6 +90,9 @@ export async function updateStation(req, res) {
         res.status(500).send({ err: 'Failed to update station' })
     }
 }
+
+
+
 
 export async function removeStation(req, res) {
     try {
