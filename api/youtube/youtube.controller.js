@@ -1,7 +1,7 @@
 import {youtubeService} from './youtube.service.js'
 
 export async function search(req,res){
-    try {
+    try {        
         const user = await youtubeService.searchYoutubeVideo(req.query.q)
         res.send(user)
     } catch (err) {
