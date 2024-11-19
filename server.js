@@ -7,6 +7,7 @@ import cookieParser from 'cookie-parser'
 import { authRoutes } from './api/auth/auth.routes.js'
 import { userRoutes } from './api/user/user.routes.js'
 import { spotifyRoutes } from './api/spotify/spotify.routes.js'
+import { artistRoutes } from './api/artsist/artist.routes.js'
 import { youtubeRoutes } from './api/youtube/youtube.routes.js'
 import { stationRoutes } from './api/stations/station.routes.js'
 import { setupSocketAPI } from './services/socket.service.js'
@@ -48,6 +49,7 @@ app.use('/api/spotify', spotifyRoutes)
 app.use('/api/youtube', youtubeRoutes)
 app.use('/api/chat', chatRoutes)
 app.use('/api/station', stationRoutes)
+app.use('/api/artists', artistRoutes)
 
 
 setupSocketAPI(server)
