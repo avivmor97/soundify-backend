@@ -30,7 +30,7 @@ if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.resolve('public')))
 } else {
     const corsOptions = {
-        origin: [   'http://127.0.0.1:3030',
+        origin: ['http://127.0.0.1:3030',
             'http://localhost:3030',
             'http://127.0.0.1:5174',
             'http://localhost:5174',
@@ -60,45 +60,44 @@ setupSocketAPI(server)
 // and allow vue/react-router to take it from there
 
 // app.get('/**', (req, res) => {
-    //     res.sendFile(path.resolve('public/index.html'))
-    // })
-    
-    import { logger } from './services/logger.service.js'
-    import { chatRoutes } from './api/chat/chat.routes.js'
-    const port = process.env.PORT || 3030
-    
-    server.listen(port, () => {
-        logger.info('Server is running on port: ' + port)
-        // savePlaylistData('4V3K3JyGFBjgnjj3wwWH4f');
-        // savePlaylistData('37i9dQZEVXbJ6IpvItkve3');
-        // savePlaylistData('37i9dQZF1DWSYF6geMtQMW');
-        // savePlaylistData('37i9dQZEVXbNG2KDcFcKOF');
-        // savePlaylistData('2xHVoSjTKY6E0YIwggIon5');
-        // savePlaylistData('37i9dQZEVXbLp5XoPON0wI');
-        // savePlaylistData('37i9dQZEVXbLRQDuF5jeBp');
-        // savePlaylistData('37i9dQZEVXbLiRSasKsNU9');
-        // savePlaylistData('37i9dQZEVXbKuaTI1Z1Afx');
-        // savePlaylistData('37i9dQZF1DWUa8ZRTfalHk');
-        // savePlaylistData('37i9dQZF1DWV7EzJMK2FUI');
-        // savePlaylistData('5ZBiA4R9h3CC3F2SJIhAm9');
-        // savePlaylistData('37i9dQZF1DX1lHW2vbQwNN');
+//     res.sendFile(path.resolve('public/index.html'))
+// })
+
+import { logger } from './services/logger.service.js'
+import { chatRoutes } from './api/chat/chat.routes.js'
+const port = process.env.PORT || 3030
+
+server.listen(port, () => {
+    logger.info('Server is running on port: ' + port)
+    // savePlaylistData('4V3K3JyGFBjgnjj3wwWH4f');
+    // savePlaylistData('37i9dQZEVXbJ6IpvItkve3');
+    // savePlaylistData('37i9dQZF1DWSYF6geMtQMW');
+    // savePlaylistData('37i9dQZEVXbNG2KDcFcKOF');
+    // savePlaylistData('2xHVoSjTKY6E0YIwggIon5');
+    // savePlaylistData('37i9dQZEVXbLp5XoPON0wI');
+    // savePlaylistData('37i9dQZEVXbLRQDuF5jeBp');
+    // savePlaylistData('37i9dQZEVXbLiRSasKsNU9');
+    // savePlaylistData('37i9dQZEVXbKuaTI1Z1Afx');
+    // savePlaylistData('37i9dQZF1DWUa8ZRTfalHk');
+    // savePlaylistData('37i9dQZF1DWV7EzJMK2FUI');
+    // savePlaylistData('5ZBiA4R9h3CC3F2SJIhAm9');
+    // savePlaylistData('37i9dQZF1DX1lHW2vbQwNN');
 
 
-        // savePlaylistData('37i9dQZF1DX0wMD4IoQ5aJ');
-        // savePlaylistData('37i9dQZF1DXcBWIGoYBM5M');
-        // savePlaylistData('37i9dQZF1DWWQRwui0ExPn');
-        // savePlaylistData('37i9dQZF1DX4SBhb3fqCJd');
-        // savePlaylistData('37i9dQZF1DWTvNyxOwkztu');
-        // savePlaylistData('37i9dQZF1DXcF6B6QPhFDv');
-        // savePlaylistData('37i9dQZF1DX2M1RktxUUHG');
-        // savePlaylistData('37i9dQZF1DX4WYpdgoIcn6');
-        // savePlaylistData('37i9dQZF1DX4sWSpwq3LiO');
-        // savePlaylistData('37i9dQZF1DWXRqgorJj26U');
-        // savePlaylistData('37i9dQZF1E4wMmDGhc9aS2');
-        // savePlaylistData('37i9dQZF1E4qSGMS0LCDb5');
-        // savePlaylistData('37i9dQZF1E4rm3VpkGRopl');
-        // savePlaylistData('37i9dQZF1E4muqTf5hDRcM');
-        // savePlaylistData('37i9dQZF1E4wmWec21cCcJ');
-    })
-    
-    
+    // savePlaylistData('37i9dQZF1DX0wMD4IoQ5aJ');
+    // savePlaylistData('37i9dQZF1DXcBWIGoYBM5M');
+    // savePlaylistData('37i9dQZF1DWWQRwui0ExPn');
+    // savePlaylistData('37i9dQZF1DX4SBhb3fqCJd');
+    // savePlaylistData('37i9dQZF1DWTvNyxOwkztu');
+    // savePlaylistData('37i9dQZF1DXcF6B6QPhFDv');
+    // savePlaylistData('37i9dQZF1DX2M1RktxUUHG');
+    // savePlaylistData('37i9dQZF1DX4WYpdgoIcn6');
+    // savePlaylistData('37i9dQZF1DX4sWSpwq3LiO');
+    // savePlaylistData('37i9dQZF1DWXRqgorJj26U');
+    // savePlaylistData('37i9dQZF1E4wMmDGhc9aS2');
+    // savePlaylistData('37i9dQZF1E4qSGMS0LCDb5');
+    // savePlaylistData('37i9dQZF1E4rm3VpkGRopl');
+    // savePlaylistData('37i9dQZF1E4muqTf5hDRcM');
+    // savePlaylistData('37i9dQZF1E4wmWec21cCcJ');
+})
+

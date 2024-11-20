@@ -49,6 +49,7 @@ async function remove(stationId) {
 
 async function add(station) {
 	try {
+		console.log(station)
 		const collection = await dbService.getCollection('station')
 		await collection.insertOne(station)
 		return station

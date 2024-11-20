@@ -9,6 +9,15 @@ export async function search(req,res){
         res.status(400).send({ err: 'error:' })
     }
 }
+export async function searchSongs(req,res){
+    try {
+        const user = await spotifyService.searchSong(req.query.q)
+        res.send(user)
+    } catch (err) {
+       
+        res.status(400).send({ err: 'error:' })
+    }
+}
 
 export async function getPlaylist(req,res){
     try {

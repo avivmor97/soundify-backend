@@ -1,8 +1,9 @@
 import express from 'express'
-import { search } from './chat.controller.js'
+import { search, addStationWTracks } from './chat.controller.js'
 
 const router = express.Router()
 
 router.get('/send',search ) 
+router.post('/send',addStationWTracks) 
 
 export const chatRoutes = router

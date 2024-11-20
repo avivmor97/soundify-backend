@@ -11,10 +11,11 @@ const spotifyApi = SpotifyApi.withClientCredentials(
 export const spotifyService = {
     getArtistById,
     search,
-    getPlaylistById
+    getPlaylistById,
+    searchSong
 }
 
-async function getArtistById(artistId) {    
+async function getArtistById(artistId) {
     try {
         const artist = await spotifyApi.artists.get(artistId)
         const topTracks = await spotifyApi.artists.topTracks(artistId, 'IL')
@@ -31,8 +32,8 @@ async function search(query) {
         const limit = 10;
         const searchFilter = ['track', 'artist', 'playlist'];
         const trackFields = `items(id,name,type,album(images,release_date),artists(id,name,type),duration_ms,track_number,external_urls(spotify))`;
-        
-        const res = await spotifyApi.search(query, searchFilter,  market, limit );
+
+        const res = await spotifyApi.search(query, searchFilter, market, limit);
         const tracks = res.tracks.items.map((item) => ({
             id: item.id,
             name: item.name,
@@ -79,6 +80,22 @@ async function getPlaylistById(id) {
     }
 }
 
+async function searchSong(query) {
+    try {
+        const limit = 1
+        const market = 'IL'
+        const searchFilter = ['track'];
+        const res = await spotifyApi.search(query, searchFilter, market, limit)
+        const song = res.tracks.items[0]
+        let track = {}
+        track.track =song
+        return track
+
+    } catch (err) {
+        console.error('Error searching for song:', err);
+        throw err; // זורקים את השגיאה למעלה
+    }
+}
 
 // async function getPlaylistById(id) {
 //     try {

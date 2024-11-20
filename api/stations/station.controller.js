@@ -21,7 +21,6 @@ export async function getStations(req, res) {
 
 export async function getStationById(req, res) {
     try {
-
         const stationId = req.params.stationId
         const station = await stationService.getById(stationId)
         res.send(station)
@@ -87,7 +86,7 @@ export async function updateStation(req, res) {
         station._id = stationId
 
         const updatedStation = await stationService.update(station)
-socketService.emitTo({type:'station-updated', data:updatedStation,label:updatedStation._id})
+        socketService.emitTo({ type: 'station-updated', data: updatedStation, label: updatedStation._id })
         res.send(updatedStation)
     } catch (err) {
         logger.error('Failed to update station', err)
@@ -100,7 +99,7 @@ socketService.emitTo({type:'station-updated', data:updatedStation,label:updatedS
 
 export async function removeStation(req, res) {
     try {
-        const stationId = req.params.id        
+        const stationId = req.params.id
         const deletedStation = await stationService.remove(stationId)
         res.send(`${deletedStation} station removed`)
     } catch (err) {
