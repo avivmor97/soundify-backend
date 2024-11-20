@@ -82,6 +82,23 @@ setupSocketAPI(server)
         // savePlaylistData('37i9dQZF1DWV7EzJMK2FUI');
         // savePlaylistData('5ZBiA4R9h3CC3F2SJIhAm9');
         // savePlaylistData('37i9dQZF1DX1lHW2vbQwNN');
+
+
+        // savePlaylistData('37i9dQZF1DX0wMD4IoQ5aJ');
+        // savePlaylistData('37i9dQZF1DXcBWIGoYBM5M');
+        // savePlaylistData('37i9dQZF1DWWQRwui0ExPn');
+        // savePlaylistData('37i9dQZF1DX4SBhb3fqCJd');
+        // savePlaylistData('37i9dQZF1DWTvNyxOwkztu');
+        // savePlaylistData('37i9dQZF1DXcF6B6QPhFDv');
+        // savePlaylistData('37i9dQZF1DX2M1RktxUUHG');
+        // savePlaylistData('37i9dQZF1DX4WYpdgoIcn6');
+        // savePlaylistData('37i9dQZF1DX4sWSpwq3LiO');
+        // savePlaylistData('37i9dQZF1DWXRqgorJj26U');
+        // savePlaylistData('37i9dQZF1E4wMmDGhc9aS2');
+        // savePlaylistData('37i9dQZF1E4qSGMS0LCDb5');
+        // savePlaylistData('37i9dQZF1E4rm3VpkGRopl');
+        // savePlaylistData('37i9dQZF1E4muqTf5hDRcM');
+        // savePlaylistData('37i9dQZF1E4wmWec21cCcJ');
     })
     
     
