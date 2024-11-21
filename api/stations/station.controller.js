@@ -31,6 +31,9 @@ export async function getStationById(req, res) {
 }
 
 export async function addStation(req, res) {
+    console.log('req:',req)
+    var {loggedinUser} = req
+    console.log('loggedinUser:',loggedinUser)
     try {
         const station = {
             "owner": {
@@ -71,6 +74,8 @@ export async function addStation(req, res) {
         station.name = `My Playlist #${stationNum}`
         // toy.owner = loggedinUser
         const addedStation = await stationService.add(station)
+        socketService.broadcast({ type: 'station-added', data: addedStation, user: loggedinUser._id })
+
         res.send(addedStation)
     } catch (err) {
         res.status(500).send({ err: 'Failed to add station' })
@@ -101,6 +106,8 @@ export async function removeStation(req, res) {
     try {
         const stationId = req.params.id
         const deletedStation = await stationService.remove(stationId)
+        socketService.broadcast({ type: 'station-removed', data: deletedStation, user: loggedinUser._id })
+
         res.send(`${deletedStation} station removed`)
     } catch (err) {
         // logger.error('Failed to remove station', err)
