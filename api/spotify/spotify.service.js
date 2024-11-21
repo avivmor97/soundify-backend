@@ -82,6 +82,8 @@ async function getPlaylistById(id) {
 
 async function searchSong(query) {
     try {
+        console.log(query);
+        
         const limit = 1
         const market = 'IL'
         const searchFilter = ['track'];
