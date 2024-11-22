@@ -30,7 +30,7 @@ export function setupSocketAPI(http) {
                     io.to(userId).emit('stationUpdated', newStation);
                     io.to(userId).emit('notification', 'Current playlist got updated');
                 }
-            });
+            })
 
         })
 
@@ -42,6 +42,16 @@ export function setupSocketAPI(http) {
         socket.on('station-watch', stationId => {
             logger.info(`Station watch from socket [id: ${socket.id}]`)
             socket.join('watching:' +stationId)
+        })
+
+        socket.on('station-add', (station) => {
+            logger.info(`Station added: ${station.name}`)
+            broadcast({ type: 'station-add', data: station })
+        })
+
+        socket.on('station-remove', (stationId) => {
+            logger.info(`Station removed: ${stationId}`)
+            broadcast({ type: 'station-remove', data: { id: stationId } });
         })
 
     })
@@ -56,7 +66,7 @@ export function sendPlaylistUpdate(newStation) {
 
 
 
-function emitTo({ type, data, label }) {
+function emitTo({ type, data, label = null }) {
     if (label) gIo.to('watching:' + label.toString()).emit(type, data)
     else gIo.emit(type, data)
 }
@@ -76,25 +86,38 @@ async function emitToUser({ type, data, userId }) {
 
 // If possible, send to all sockets BUT not the current socket 
 // Optionally, broadcast to a room / to all
-async function broadcast({ type, data, room = null, userId }) {
-    userId = userId.toString()
+// async function broadcast({ type, data, room = null, userId }) {
+//     userId = userId.toString()
 
-    logger.info(`Broadcasting event: ${type}`)
-    const excludedSocket = await _getUserSocket(userId)
-    if (room && excludedSocket) {
-        logger.info(`Broadcast to room ${room} excluding user: ${userId}`)
-        excludedSocket.broadcast.to(room).emit(type, data)
-    } else if (excludedSocket) {
-        logger.info(`Broadcast to all excluding user: ${userId}`)
-        excludedSocket.broadcast.emit(type, data)
-    } else if (room) {
-        logger.info(`Emit to room: ${room}`)
-        gIo.to(room).emit(type, data)
+//     logger.info(`Broadcasting event: ${type}`)
+//     const excludedSocket = await _getUserSocket(userId)
+//     if (room && excludedSocket) {
+//         logger.info(`Broadcast to room ${room} excluding user: ${userId}`)
+//         excludedSocket.broadcast.to(room).emit(type, data)
+//     } else if (excludedSocket) {
+//         logger.info(`Broadcast to all excluding user: ${userId}`)
+//         excludedSocket.broadcast.emit(type, data)
+//     } else if (room) {
+//         logger.info(`Emit to room: ${room}`)
+//         gIo.to(room).emit(type, data)
+//     } else {
+//         logger.info(`Emit to all`)
+//         gIo.emit(type, data)
+//     }
+// }
+
+async function broadcast({ type, data, room = null }) {
+    logger.info(`Broadcasting event: ${type}`);
+
+    if (room) {
+        logger.info(`Emit to room: ${room}`);
+        gIo.to(room).emit(type, data);
     } else {
-        logger.info(`Emit to all`)
-        gIo.emit(type, data)
+        logger.info(`Emit to all`);
+        gIo.emit(type, data);
     }
 }
+
 
 async function _getUserSocket(userId) {
     const sockets = await _getAllSockets()
