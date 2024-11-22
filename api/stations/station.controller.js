@@ -74,7 +74,7 @@ export async function addStation(req, res) {
         station.name = `My Playlist #${stationNum}`
         // toy.owner = loggedinUser
         const addedStation = await stationService.add(station)
-        socketService.broadcast({ type: 'station-added', data: addedStation, user: loggedinUser._id })
+        socketService.broadcast({ type: 'station-add', data: addedStation })
 
         res.send(addedStation)
     } catch (err) {
@@ -106,7 +106,7 @@ export async function removeStation(req, res) {
     try {
         const stationId = req.params.id
         const deletedStation = await stationService.remove(stationId)
-        socketService.broadcast({ type: 'station-removed', data: deletedStation, user: loggedinUser._id })
+        socketService.broadcast({ type: 'station-remove', data: { id: stationId } })
 
         res.send(`${deletedStation} station removed`)
     } catch (err) {
