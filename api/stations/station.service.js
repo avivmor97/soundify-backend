@@ -15,7 +15,7 @@ export const stationService = {
 async function query(filterBy = { txt: '' }) {
 	try {
 		const collection = await dbService.getCollection('station')
-		var stations = await collection.find().toArray()
+		var stations = await collection.find().sort({ _id: -1 }).toArray() 
 		return stations
 	} catch (err) {
 		logger.error('cannot find station', err)
